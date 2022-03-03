@@ -10,6 +10,7 @@ use Osiset\ShopifyApp\Objects\Values\AccessToken;
 use Osiset\ShopifyApp\Objects\Values\NullAccessToken;
 use Osiset\ShopifyApp\Objects\Values\ShopDomain;
 use Osiset\ShopifyApp\Util;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Install steps for a shop.
@@ -61,6 +62,13 @@ class InstallShop
             // Shop does not exist, make them and re-get
             $this->shopCommand->make($shopDomain, NullAccessToken::fromNative(null));
             $shop = $this->shopQuery->getByDomain($shopDomain);
+
+            $shopId = $shop->getAttribute('id');
+            DB::table('config')->insert([
+                ['page' => 'home', 'enable' => '1', 'theme' => '0', 'position' => '0', 'user_id' => $shopId],
+                ['page' => 'product', 'enable' => '1', 'theme' => '0', 'position' => '0', 'user_id' => $shopId],
+                ['page' => 'cart', 'enable' => '1', 'theme' => '0', 'position' => '0', 'user_id' => $shopId]
+            ]);
         }
 
         // Access/grant mode
