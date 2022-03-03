@@ -89,7 +89,6 @@ class VerifyShopify
      */
     public function handle(Request $request, Closure $next)
     {
-        //tesst code
         // Verify the HMAC (if available)
         $hmacResult = $this->verifyHmac($request);
         if ($hmacResult === false) {
